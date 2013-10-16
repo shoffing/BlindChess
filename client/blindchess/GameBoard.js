@@ -19,6 +19,8 @@ function GameBoard()
 	this.prevBoardStr = "";
 	this.boardImage = processing.createImage(GameBoard.BOARD_COLS * GameBoard.TILE_WIDTH, GameBoard.BOARD_ROWS * GameBoard.TILE_HEIGHT, processing.RGB);
 
+	// FIX THIS! Shouldn't have to have a timed redraw - but we're having a problem with image loading
+	this.lastRedraw = processing.millis();
 
 	//--------------------
 	// Set up the board
@@ -161,7 +163,7 @@ GameBoard.prototype.render = function(player)
 	if(player !== undefined)
 	{
 
-		if(!(this.toString() == this.prevBoardStr)) // board has changed, need to re-render
+		if(!(this.toString() == this.prevBoardStr) || processing.millis() - lastRedraw > 1000) // board has changed, need to re-render
 		{
 			var myPieces = [];
 
@@ -241,6 +243,7 @@ GameBoard.prototype.render = function(player)
 			this.boardImage.updatePixels();
 
 			this.prevBoardStr = this.toString();
+			lastRedraw = processing.millis();
 		}
 		
 		processing.imageMode(processing.CORNER);
