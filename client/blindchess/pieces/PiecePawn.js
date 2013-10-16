@@ -5,7 +5,7 @@ function PiecePawn(row, col, player)
 	this.player = player;
 
 	this.type = "PAWN";
-	this.visionRadius = GameBoard.TILE_WIDTH * 1.5;
+	this.visionRadius = 1.5;
 	this.shouldCollide = true;
 
 	this.sprite = processing.loadImage("blindchess/imgs/pieces/" + (player ? "white_" : "black_") + "pawn.png");

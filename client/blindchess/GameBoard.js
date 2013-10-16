@@ -10,14 +10,19 @@ function GameBoard()
 
 		GameBoard.TILE_WIDTH = 64;
 		GameBoard.TILE_HEIGHT = 64;
+
+		GameBoard.FOG_RES = 16; // per tile
 	}
 
 	this.board = [];
 	for(var i = 0; i < GameBoard.BOARD_ROWS; i++)
 		this.board[i] = [];
 
+	this.fogOfWar = new FogOfWar(GameBoard.BOARD_COLS * GameBoard.FOG_RES, GameBoard.BOARD_ROWS * GameBoard.FOG_RES);
+
 	this.prevBoardStr = "";
 	this.boardImage = processing.createImage(GameBoard.BOARD_COLS * GameBoard.TILE_WIDTH, GameBoard.BOARD_ROWS * GameBoard.TILE_HEIGHT, processing.RGB);
+
 
 	//--------------------
 	// Set up the board
@@ -179,7 +184,7 @@ GameBoard.prototype.render = function(player)
 					{
 						this.board[r][c].render();
 
-						// Calculate vision stuff
+						// If this is my piece, push it to the array of my pieces for vision calculation
 						if(this.board[r][c].player == player)
 						{
 							myPieces.push(this.board[r][c]);
@@ -190,51 +195,37 @@ GameBoard.prototype.render = function(player)
 
 
 			//=================
-			// LIGHTING STUFF
+			// FOG OF WAR
 			//=================
 
-			// Make black PGraphics
-			var darknessMask = processing.createGraphics(processing.width, processing.height);
-			darknessMask.beginDraw();
-				darknessMask.background(0);
+			var pieceVisions = [];
+			for(var i = 0; i < myPieces.length; i++)
+			{
+				pieceVisions.push({
+					x: myPieces[i].col * GameBoard.FOG_RES + 0.5 * GameBoard.FOG_RES,
+					y: myPieces[i].row * GameBoard.FOG_RES + 0.5 * GameBoard.FOG_RES,
+					radius: myPieces[i].visionRadius * GameBoard.FOG_RES
+				});
+			}
 
-				darknessMask.noStroke();
+			var fog = this.fogOfWar.update(pieceVisions);
 
-				darknessMask.loadPixels();
+			processing.noStroke();
+			processing.rectMode(processing.CORNER);
 
-				for(var i = 0; i < myPieces.length; i++)
+			var fogSizeX = GameBoard.TILE_WIDTH / GameBoard.FOG_RES;
+			var fogSizeY = GameBoard.TILE_HEIGHT / GameBoard.FOG_RES;
+			for(var x = 0; x < fog.length; x++)
+			{
+				for(var y = 0; y < fog[0].length; y++)
 				{
-					var p = myPieces[i];
-
-					var curPieceX = p.getPosX();
-					var curPieceY = p.getPosY();
-
-					var res = GameBoard.TILE_WIDTH / 16;
-					for(var cx = 0; cx < darknessMask.width; cx += res)
-					{
-						for(var cy = 0; cy < darknessMask.height; cy += res)
-						{
-							var curDistRatio = processing.dist(curPieceX, curPieceY, cx + res/2, cy + res/2) / p.visionRadius;
-							if(curDistRatio <= 1)
-							{
-								var curAlpha = (darknessMask.pixels.getPixel(cy * darknessMask.width + cx) >> 24) & 0xFF;
-								var newColor = processing.color(0, 0, 0, curAlpha - 255 * 1.5 * (1 - curDistRatio));
-
-								for(var crx = cx; crx < cx + res; crx++)
-									for(var cry = cy; cry < cy + res; cry++)
-										darknessMask.pixels.setPixel(cry * darknessMask.width + crx, newColor);
-							}
-						}
-					}
+					processing.fill(0, 0, 0, 255 * Math.pow(fog[x][y], 2)); // Falloff = x^2
+					processing.rect(x * fogSizeX, y * fogSizeY, fogSizeX, fogSizeY);
 				}
-				darknessMask.updatePixels();
-			darknessMask.endDraw();
-
-			processing.image(darknessMask, 0, 0);
+			}
 
 
 			// Update board image
-
 			processing.loadPixels();
 			this.boardImage.pixels.set(processing.pixels.toArray());
 			this.boardImage.updatePixels();

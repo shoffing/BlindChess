@@ -5,7 +5,7 @@ function PieceBishop(row, col, player)
 	this.player = player;
 
 	this.type = "BISHOP";
-	this.visionRadius = GameBoard.TILE_WIDTH * 2.5;
+	this.visionRadius = 2.5;
 	this.shouldCollide = true;
 
 	this.sprite = processing.loadImage("blindchess/imgs/pieces/" + (player ? "white_" : "black_") + "bishop.png");
