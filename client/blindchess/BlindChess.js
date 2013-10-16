@@ -8,10 +8,12 @@ var board;
 
 var holdPiece; // for rendering the piece on the cursor
 
+var timeStart;
+
 function sketchProc(inProcessing)
 {
 	processing = inProcessing;
-
+	
 	processing.setup = function()
 	{
 		// Preloading images
@@ -29,6 +31,9 @@ function sketchProc(inProcessing)
 			blindchess/imgs/pieces/white_rook.png";
 		*/
 
+		// NEED TO REMOVE THIS EVENTUALLY. Shouldn't have to redraw it twice in the beginning...
+		timeStart = processing.millis();
+
 		processing.size(512, 512);
 
 		board = new GameBoard();
@@ -37,16 +42,16 @@ function sketchProc(inProcessing)
 
 		playerNumber = false;
 	}
-
+	
 	processing.draw = function()
 	{
 		board.render(playerNumber);
-
+		
 		// Draw hold piece
 		if(holdPiece !== undefined)
 		{
 			processing.noStroke();
-
+			
 			// Draw rect over start tile
 			processing.fill(255, 0, 0, 96);
 			processing.rect(holdPiece.col * GameBoard.TILE_WIDTH, holdPiece.row * GameBoard.TILE_HEIGHT, GameBoard.TILE_WIDTH, GameBoard.TILE_HEIGHT);
@@ -132,8 +137,7 @@ function sketchProc(inProcessing)
 
 }
 
-onload = function()
-{
+$(document).ready(function() {
 	var canvas = document.getElementById("canvas");
 	var p = new Processing(canvas, sketchProc);
-}
+});

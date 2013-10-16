@@ -9,6 +9,7 @@ function PieceKnight(row, col, player)
 	this.shouldCollide = false;
 
 	this.sprite = processing.loadImage("blindchess/imgs/pieces/" + (player ? "white_" : "black_") + "knight.png");
+	this.sprite.sourceImg.addEventListener("load", function() { board.reloadBoard(); });
 }
 
 // Inherited from Piece

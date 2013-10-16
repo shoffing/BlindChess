@@ -9,6 +9,7 @@ function PieceRook(row, col, player)
 	this.shouldCollide = true;
 
 	this.sprite = processing.loadImage("blindchess/imgs/pieces/" + (player ? "white_" : "black_") + "rook.png");
+	this.sprite.sourceImg.addEventListener("load", function() { board.reloadBoard(); });
 }
 
 // Inherited from Piece

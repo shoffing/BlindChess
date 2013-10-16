@@ -9,6 +9,7 @@ function PiecePawn(row, col, player)
 	this.shouldCollide = true;
 
 	this.sprite = processing.loadImage("blindchess/imgs/pieces/" + (player ? "white_" : "black_") + "pawn.png");
+	this.sprite.sourceImg.addEventListener("load", function() { board.reloadBoard(); });
 
 	//
 
@@ -40,10 +41,10 @@ PiecePawn.prototype.move = function(toRow, toCol, isOccupied)
 	var deltaCol = toCol - this.col;
 	var angleInDegrees = Math.atan2(deltaCol, deltaRow) * 180 / Math.PI;
 
-	var isMovingForward = (deltaCol == 0) && (this.player ? (deltaRow < 0) : (deltaRow > 0));
+	var isMovingForward = (deltaCol == 0 || isOccupied) && (this.player ? (deltaRow < 0) : (deltaRow > 0));
 	var isWithinDistanceLimit = Math.abs(deltaRow) <= (this.hasMoved ? 1 : 2);
 
-	if( (!isOccupied && isMovingForward && isWithinDistanceLimit) || (isOccupied && Math.abs(deltaRow) == 1 && Math.abs(deltaCol) == 1) )
+	if( (!isOccupied && isMovingForward && isWithinDistanceLimit) || (isOccupied && Math.abs(deltaRow) == 1 && Math.abs(deltaCol) == 1 && isMovingForward) )
 	{
 		this.row = toRow;
 		this.col = toCol;
@@ -65,10 +66,10 @@ PiecePawn.prototype.testMove = function(toRow, toCol, isOccupied)
 	var deltaCol = toCol - this.col;
 	var angleInDegrees = Math.atan2(deltaCol, deltaRow) * 180 / Math.PI;
 
-	var isMovingForward = (deltaCol == 0) && (this.player ? (deltaRow < 0) : (deltaRow > 0));
+	var isMovingForward = (deltaCol == 0 || isOccupied) && (this.player ? (deltaRow < 0) : (deltaRow > 0));
 	var isWithinDistanceLimit = Math.abs(deltaRow) <= (this.hasMoved ? 1 : 2);
 
-	return (!isOccupied && isMovingForward && isWithinDistanceLimit) || (isOccupied && Math.abs(deltaRow) == 1 && Math.abs(deltaCol) == 1);
+	return (!isOccupied && isMovingForward && isWithinDistanceLimit) || (isOccupied && Math.abs(deltaRow) == 1 && Math.abs(deltaCol) == 1 && isMovingForward);
 }
 
 PiecePawn.prototype.render = function()
