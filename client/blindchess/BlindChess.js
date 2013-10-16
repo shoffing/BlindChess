@@ -35,7 +35,7 @@ function sketchProc(inProcessing)
 
 		holdPiece = undefined;
 
-		playerNumber = false;
+		playerNumber = true;
 	}
 	
 	processing.draw = function()
