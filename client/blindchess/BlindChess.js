@@ -8,8 +8,6 @@ var board;
 
 var holdPiece; // for rendering the piece on the cursor
 
-var timeStart;
-
 function sketchProc(inProcessing)
 {
 	processing = inProcessing;
@@ -30,9 +28,6 @@ function sketchProc(inProcessing)
 			blindchess/imgs/pieces/white_queen.png,
 			blindchess/imgs/pieces/white_rook.png";
 		*/
-
-		// NEED TO REMOVE THIS EVENTUALLY. Shouldn't have to redraw it twice in the beginning...
-		timeStart = processing.millis();
 
 		processing.size(512, 512);
 
