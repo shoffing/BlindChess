@@ -30,8 +30,8 @@ PieceRook.prototype.move = function(toRow, toCol, isOccupied)
 {
 	// Can only move at angles that are multiples of 90 deg
 
-	var deltaRow = toRow - row;
-	var deltaCol = toCol - col;
+	var deltaRow = toRow - this.row;
+	var deltaCol = toCol - this.col;
 	var angleInDegrees = Math.atan2(deltaCol, deltaRow) * 180 / Math.PI;
 
 	if(angleInDegrees % 90 == 0)

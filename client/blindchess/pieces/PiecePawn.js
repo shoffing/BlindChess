@@ -41,9 +41,9 @@ PiecePawn.prototype.move = function(toRow, toCol, isOccupied)
 	var angleInDegrees = Math.atan2(deltaCol, deltaRow) * 180 / Math.PI;
 
 	var isMovingForward = (deltaCol == 0) && (this.player ? (deltaRow < 0) : (deltaRow > 0));
-	var isWithinDistanceLimit = abs(deltaRow) <= (this.hasMoved ? 1 : 2);
+	var isWithinDistanceLimit = Math.abs(deltaRow) <= (this.hasMoved ? 1 : 2);
 
-	if( (!isOccupied && isMovingForward && isWithinDistanceLimit) || (isOccupied && abs(deltaRow) == 1 && abs(deltaCol) == 1) )
+	if( (!isOccupied && isMovingForward && isWithinDistanceLimit) || (isOccupied && Math.abs(deltaRow) == 1 && Math.abs(deltaCol) == 1) )
 	{
 		this.row = toRow;
 		this.col = toCol;
@@ -66,9 +66,9 @@ PiecePawn.prototype.testMove = function(toRow, toCol, isOccupied)
 	var angleInDegrees = Math.atan2(deltaCol, deltaRow) * 180 / Math.PI;
 
 	var isMovingForward = (deltaCol == 0) && (this.player ? (deltaRow < 0) : (deltaRow > 0));
-	var isWithinDistanceLimit = abs(deltaRow) <= (this.hasMoved ? 1 : 2);
+	var isWithinDistanceLimit = Math.abs(deltaRow) <= (this.hasMoved ? 1 : 2);
 
-	return (!isOccupied && isMovingForward && isWithinDistanceLimit) || (isOccupied && abs(deltaRow) == 1 && abs(deltaCol) == 1);
+	return (!isOccupied && isMovingForward && isWithinDistanceLimit) || (isOccupied && Math.abs(deltaRow) == 1 && Math.abs(deltaCol) == 1);
 }
 
 PiecePawn.prototype.render = function()

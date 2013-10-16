@@ -6,7 +6,7 @@ function PieceKnight(row, col, player)
 
 	this.type = "KNIGHT";
 	this.visionRadius = GameBoard.TILE_WIDTH * 2.5;
-	this.shouldCollide = true;
+	this.shouldCollide = false;
 
 	this.sprite = processing.loadImage("blindchess/imgs/pieces/" + (player ? "white_" : "black_") + "knight.png");
 }

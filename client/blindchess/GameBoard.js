@@ -163,7 +163,7 @@ GameBoard.prototype.render = function(player)
 
 		if(!(this.toString() == this.prevBoardStr)) // board has changed, need to re-render
 		{
-			//var myPieces = [];
+			var myPieces = [];
 
 			// Draw board and pieces
 			processing.noStroke();
@@ -181,10 +181,10 @@ GameBoard.prototype.render = function(player)
 						this.board[r][c].render();
 
 						// Calculate vision stuff
-						/*if(this.board[r][c].player == player)
+						if(this.board[r][c].player == player)
 						{
 							myPieces.push(this.board[r][c]);
-						}*/
+						}
 					}
 				}
 			}
@@ -195,15 +195,18 @@ GameBoard.prototype.render = function(player)
 			//=================
 
 			// Make black PGraphics
-			/*PGraphics darknessMask = createGraphics(width, height);
+			var darknessMask = processing.createGraphics(processing.width, processing.height);
 			darknessMask.beginDraw();
 				darknessMask.background(0);
 
 				darknessMask.noStroke();
 
 				darknessMask.loadPixels();
-				for(Piece p : myPieces)
+
+				for(var i = 0; i < myPieces.length; i++)
 				{
+					var p = myPieces[i];
+
 					var curPieceX = p.getPosX();
 					var curPieceY = p.getPosY();
 
@@ -212,15 +215,15 @@ GameBoard.prototype.render = function(player)
 					{
 						for(var cy = 0; cy < darknessMask.height; cy += res)
 						{
-							float curDistRatio = dist(curPieceX, curPieceY, cx + res/2, cy + res/2) / p.getVisionRadius();
+							var curDistRatio = processing.dist(curPieceX, curPieceY, cx + res/2, cy + res/2) / p.visionRadius;
 							if(curDistRatio <= 1)
 							{
-								var curAlpha = (darknessMask.pixels[cy * darknessMask.width + cx] >> 24) & 0xFF;
-								color newColor = color(0, 0, 0, curAlpha - 255 * 1.5 * (1 - curDistRatio));
+								var curAlpha = (darknessMask.pixels.getPixel(cy * darknessMask.width + cx) >> 24) & 0xFF;
+								var newColor = processing.color(0, 0, 0, curAlpha - 255 * 1.5 * (1 - curDistRatio));
 
 								for(var crx = cx; crx < cx + res; crx++)
 									for(var cry = cy; cry < cy + res; cry++)
-										darknessMask.pixels[cry * darknessMask.width + crx] = newColor;
+										darknessMask.pixels.setPixel(cry * darknessMask.width + crx, newColor);
 							}
 						}
 					}
@@ -228,7 +231,8 @@ GameBoard.prototype.render = function(player)
 				darknessMask.updatePixels();
 			darknessMask.endDraw();
 
-			image(darknessMask, 0, 0);*/
+			processing.image(darknessMask, 0, 0);
+
 
 			// Update board image
 
