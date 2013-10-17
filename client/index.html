@@ -3,6 +3,7 @@
 
 	<script src="js/jquery.js"></script>
 	<script src="js/processing.js"></script>
+	<script src="http://97.107.134.245:8001/socket.io/socket.io.js"></script>
 
 	<style>
 		body {
@@ -16,13 +17,17 @@
 			width: 600px;
 			text-align: center;
 		}
+
+		#info {
+			margin-top: 16px;
+		}
 	</style>
 </head>
 
 <body>
 	<div id="cont">
 		<canvas id="canvas" width="512" height="512"></canvas>
-		<h2 id="turn">White Player's Turn!</h2>
+		<div id="info"></div>
 	</div>
 	
 	<script src="blindchess/BlindChess.js"></script>

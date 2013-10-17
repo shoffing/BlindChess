@@ -93,6 +93,15 @@ GameBoard.prototype.move = function(fromRow, fromCol, toRow, toCol, playerNum)
 		{
 			if(this.board[fromRow][fromCol].move( toRow, toCol, this.board[toRow][toCol] !== undefined ))
 			{
+				// Check for taking a king
+				if(this.board[toRow][toCol] !== undefined && this.board[toRow][toCol].type == "KING")
+				{
+					gameOver = true;
+					winner = this.board[fromRow][fromCol].player;
+
+					this.reloadBoard();
+				}
+
 				this.board[toRow][toCol] = this.board[fromRow][fromCol];
 				this.board[fromRow][fromCol] = undefined;
 
@@ -162,42 +171,41 @@ GameBoard.prototype.checkCollision = function(fromRow, fromCol, toRow, toCol)
 
 GameBoard.prototype.render = function(player)
 {
-	if(player !== undefined)
+	if(!(this.toString() == this.prevBoardStr)) // board has changed, need to re-render
 	{
+		var myPieces = [];
 
-		if(!(this.toString() == this.prevBoardStr)) // board has changed, need to re-render
+		// Draw board and pieces
+		processing.noStroke();
+		for(var r = 0; r < GameBoard.BOARD_ROWS; r++)
 		{
-			var myPieces = [];
-
-			// Draw board and pieces
-			processing.noStroke();
-			for(var r = 0; r < GameBoard.BOARD_ROWS; r++)
+			for(var c = 0; c < GameBoard.BOARD_COLS; c++)
 			{
-				for(var c = 0; c < GameBoard.BOARD_COLS; c++)
+				// Draw board tiles
+				processing.fill((r + c) % 2 == 0 ? 255 : 64);
+				processing.rect(c * GameBoard.TILE_WIDTH, r * GameBoard.TILE_HEIGHT, GameBoard.TILE_WIDTH, GameBoard.TILE_HEIGHT);
+
+				// Draw pieces
+				if(this.board[r][c] !== undefined)
 				{
-					// Draw board tiles
-					processing.fill((r + c) % 2 == 0 ? 255 : 64);
-					processing.rect(c * GameBoard.TILE_WIDTH, r * GameBoard.TILE_HEIGHT, GameBoard.TILE_WIDTH, GameBoard.TILE_HEIGHT);
+					this.board[r][c].render();
 
-					// Draw pieces
-					if(this.board[r][c] !== undefined)
+					// If this is my piece, push it to the array of my pieces for vision calculation
+					if(this.board[r][c].player == player)
 					{
-						this.board[r][c].render();
-
-						// If this is my piece, push it to the array of my pieces for vision calculation
-						if(this.board[r][c].player == player)
-						{
-							myPieces.push(this.board[r][c]);
-						}
+						myPieces.push(this.board[r][c]);
 					}
 				}
 			}
+		}
 
 
-			//=================
-			// FOG OF WAR
-			//=================
+		//=================
+		// FOG OF WAR
+		//=================
 
+		if(!gameOver)
+		{
 			var pieceVisions = [];
 			for(var i = 0; i < myPieces.length; i++)
 			{
@@ -223,46 +231,24 @@ GameBoard.prototype.render = function(player)
 					processing.rect(x * fogSizeX, y * fogSizeY, fogSizeX, fogSizeY);
 				}
 			}
-
-
-			// Update board image
-			processing.loadPixels();
-			this.boardImage.pixels.set(processing.pixels.toArray());
-			this.boardImage.updatePixels();
-
-			this.prevBoardStr = this.toString();
-		}
-		
-		processing.imageMode(processing.CORNER);
-		processing.image(this.boardImage, 0, 0);
-
-	} else {
-
-		// Draw board and pieces
-		processing.noStroke();
-		for(var r = 0; r < GameBoard.BOARD_ROWS; r++)
-		{
-			for(var c = 0; c < GameBoard.BOARD_COLS; c++)
-			{
-				// Draw board tiles
-				processing.fill((r + c) % 2 == 0 ? 255 : 64);
-				processing.rect(c * GameBoard.TILE_WIDTH, r * GameBoard.TILE_HEIGHT, GameBoard.TILE_WIDTH, GameBoard.TILE_HEIGHT);
-
-				// Draw pieces
-				if(this.board[r][c] !== undefined)
-				{
-					this.board[r][c].render();
-				}
-			}
 		}
 
+
+		// Update board image` 
+		processing.loadPixels();
+		this.boardImage.pixels.set(processing.pixels.toArray());
+		this.boardImage.updatePixels();
+
+		this.prevBoardStr = this.toString();
 	}
+	
+	processing.imageMode(processing.CORNER);
+	processing.image(this.boardImage, 0, 0);
 }
 
 // Hacky function to manually refresh/re-render the game board by changing the previous string.
 GameBoard.prototype.reloadBoard = function()
 {
-	console.log("MANUAL REFRESH");
 	this.prevBoardStr = "BANANA";
 }
 
