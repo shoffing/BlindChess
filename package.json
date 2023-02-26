@@ -1,0 +1,25 @@
+{
+  "name": "blindchess",
+  "version": "1.0.0",
+  "description": "BlindChess Server\r ==========",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^3.21.2",
+    "socket.io": "^0.9.19"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shoffing/BlindChess.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shoffing/BlindChess/issues"
+  },
+  "homepage": "https://github.com/shoffing/BlindChess#readme"
+}
